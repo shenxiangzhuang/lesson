@@ -1,0 +1,20 @@
+{
+  "name": "lesson",
+  "interface": {
+    "displayName": "Lesson"
+  },
+  "plugins": [
+    {
+      "name": "lesson",
+      "source": {
+        "source": "local",
+        "path": "./plugins/lesson"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "lesson",
+  "version": "0.1.0",
+  "description": "Learn API design and debugging through focused, code-centered improvements and self-contained lessons.",
+  "author": {
+    "name": "Mathew Shen",
+    "url": "https://github.com/shenxiangzhuang"
+  },
+  "homepage": "https://github.com/shenxiangzhuang/lesson",
+  "repository": "https://github.com/shenxiangzhuang/lesson",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Lesson",
+    "shortDescription": "与 Agent 一起理解、改进代码并沉淀经验",
+    "longDescription": "从全局聚焦一个 Bug 或 API 设计问题，通过代码理解原因、比较方案、实施验证，再回到全局。生成自包含的 Markdown lesson，供用户学习和 Agent 参考。",
+    "developerName": "Mathew Shen",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "defaultPrompt": [
+      "使用 $lesson，和我一起找出当前 API 的一个设计问题，解释取舍并完成优化。",
+      "使用 $lesson，将这次 Bug 的根因、修复和验证整理成可独立阅读的代码讲解。"
+    ]
+  }
+}
