@@ -1,0 +1,25 @@
+{
+  "name": "lesson",
+  "version": "0.1.0",
+  "description": "Learn API design and debugging through focused, code-centered improvements and self-contained lessons.",
+  "author": {
+    "name": "Mathew Shen",
+    "url": "https://github.com/shenxiangzhuang"
+  },
+  "homepage": "https://github.com/shenxiangzhuang/lesson",
+  "repository": "https://github.com/shenxiangzhuang/lesson",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Lesson",
+    "shortDescription": "Learn from code, improve it, and keep the lessons",
+    "longDescription": "Start with system context, focus on one bug or API design issue, compare options, implement and validate, then revisit the whole. Write self-contained Markdown lessons for users and future agents.",
+    "developerName": "Mathew Shen",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "defaultPrompt": [
+      "Use $lesson to find one design issue in this API with me, explain the tradeoffs, and improve it.",
+      "Use $lesson to explain this bug's cause, fix, and validation in a self-contained code walkthrough."
+    ]
+  }
+}
