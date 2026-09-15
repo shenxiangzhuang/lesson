@@ -21,10 +21,10 @@ Follow-up questions and changes on the same topic continue the workflow without 
 
 ## Install in Codex
 
-After a version is published, run these commands. Replace `v0.1.0` with the desired [release](https://github.com/shenxiangzhuang/lesson/releases):
+After a version is published, run these commands. Replace `v0.1.1` with the desired [release](https://github.com/shenxiangzhuang/lesson/releases):
 
 ```sh
-codex plugin marketplace add shenxiangzhuang/lesson --ref v0.1.0
+codex plugin marketplace add shenxiangzhuang/lesson --ref v0.1.1
 codex plugin add lesson@lesson
 ```
 
@@ -59,7 +59,7 @@ You can also add a GitHub marketplace from the Codex plugin page: use repository
 After the version is published to npm:
 
 ```sh
-pi install npm:@shenxiangzhuang/lesson@0.1.0
+pi install npm:@mathewshen/lesson@0.1.1
 ```
 
 Start a new Pi session and invoke `/skill:lesson`.
@@ -101,7 +101,7 @@ The npm `version` hook syncs the [Codex manifest](plugins/lesson/.codex-plugin/p
 
 ### Set up npm publishing
 
-The proposed package name is `@shenxiangzhuang/lesson`. The publishing account needs access to that scope. To use another scope, update `package.json` and the installation examples.
+The package name is `@mathewshen/lesson`. The publishing account needs access to that scope. To use another scope, update `package.json` and the installation examples.
 
 The workflow supports npm Trusted Publishing (OIDC). Before the package exists, add an `NPM_TOKEN` with publish access to the repository's Actions secrets for the first tagged release. After that release, add a GitHub Actions trusted publisher in the npm package settings:
 
@@ -114,13 +114,13 @@ Then remove `NPM_TOKEN` to use OIDC for later releases. The workflow uses a GitH
 
 ### Push a release tag
 
-1. Update the skill or plugin metadata, bump with `npm version`, commit, and push to `master`. Wait for checks to pass. The first release can use the existing `0.1.0`.
+1. Update the skill or plugin metadata, bump with `npm version`, commit, and push to `master`. Wait for checks to pass. The first release can use the existing `0.1.1`.
 2. Tag that commit with the matching `vX.Y.Z` and push. For the first release:
 
    ```sh
-   python3 scripts/check-release.py v0.1.0
-   git tag -a v0.1.0 -m "Release v0.1.0"
-   git push origin v0.1.0
+   python3 scripts/check-release.py v0.1.1
+   git tag -a v0.1.1 -m "Release v0.1.1"
+   git push origin v0.1.1
    ```
 
 3. The [release workflow](.github/workflows/release.yml) validates the packages and tag, publishes npm, then creates a GitHub Release with generated notes. Failed checks or npm publication prevent the GitHub Release.
