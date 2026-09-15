@@ -1,6 +1,6 @@
 {
   "name": "lesson",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Learn API design and debugging through focused, code-centered improvements and self-contained lessons.",
   "author": {
     "name": "Mathew Shen",
@@ -16,7 +16,10 @@
     "longDescription": "Start with system context, focus on one bug or API design issue, compare options, implement and validate, then revisit the whole. Write self-contained Markdown lessons for users and future agents.",
     "developerName": "Mathew Shen",
     "category": "Productivity",
-    "capabilities": ["Interactive", "Write"],
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
     "defaultPrompt": [
       "Use $lesson to find one design issue in this API with me, explain the tradeoffs, and improve it.",
       "Use $lesson to explain this bug's cause, fix, and validation in a self-contained code walkthrough."

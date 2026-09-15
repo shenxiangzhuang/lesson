@@ -1,6 +1,6 @@
 {
-  "name": "@shenxiangzhuang/lesson",
-  "version": "0.1.0",
+  "name": "@mathewshen/lesson",
+  "version": "0.1.1",
   "description": "Learn API design and debugging through focused, code-centered improvements and self-contained lessons.",
   "license": "MIT",
   "author": "Mathew Shen",
@@ -9,13 +9,20 @@
     "url": "git+https://github.com/shenxiangzhuang/lesson.git"
   },
   "homepage": "https://github.com/shenxiangzhuang/lesson",
-  "keywords": ["agent-skills", "pi-package", "api-design", "learning"],
+  "keywords": [
+    "agent-skills",
+    "pi-package",
+    "api-design",
+    "learning"
+  ],
   "files": [
     "plugins/lesson/skills/",
     "plugins/lesson/.codex-plugin/plugin.json"
   ],
   "pi": {
-    "skills": ["./plugins/lesson/skills"]
+    "skills": [
+      "./plugins/lesson/skills"
+    ]
   },
   "scripts": {
     "version": "node -e \"const fs = require('node:fs'); const p = 'plugins/lesson/.codex-plugin/plugin.json'; const m = JSON.parse(fs.readFileSync(p, 'utf8')); m.version = require('./package.json').version; fs.writeFileSync(p, JSON.stringify(m, null, 2) + '\\n');\""
