@@ -1,106 +1,106 @@
 ---
 name: lesson
-description: 在用户希望通过真实项目主动学习 Bug 分析、API 或架构设计，或要求将已有修复和设计工作事后复盘为 lesson 时使用。支持显式调用及“带我理解”“一起学习”“整理成 lesson”等学习或沉淀意图，生成项目顶层 lesson/ 下的自包含 Markdown 文档。普通修复、代码审查和优化请求默认不触发。
+description: Learn debugging, API design, or architecture through a real project, or turn completed work into a lesson. Use for explicit invocation or learning intent such as "help me understand", "learn together", or "write a lesson". Creates self-contained Markdown in the project's top-level lesson/ folder. Routine fixes, reviews, and optimizations do not trigger it by default.
 ---
 
 # Lesson
 
-通过共同理解和改进真实项目，让用户学习工程判断，让后续 Agent 能检索、核验和复用经验。假设用户没有读过项目中 99% 的代码；不要据此假定用户缺少编程基础。
+Help users learn engineering judgment and future agents find, verify, and reuse insights. Assume the user has not read 99% of the project's code, without assuming they lack programming knowledge.
 
-## 两个入口
+## Two entry points
 
-| 入口 | 触发意图 | 执行方式 |
+| Entry | Intent | Approach |
 | --- | --- | --- |
-| 主动学习 | 用户希望通过当前项目学习、理解或共同改进一个 Bug、API 或架构设计问题 | 进入下方协作流程，从全局聚焦一个问题；是否实施改动以用户请求为准 |
-| 事后复盘 | 用户要求把已有修复、设计讨论或改动整理成 lesson，或重建已有 lesson | 读取已有代码、讨论、差异和验证证据，按相同叙事顺序讲解；不重复实施已经完成的工作 |
+| Active learning | Learn about a bug, API, or architecture in the current project, optionally improving it together | Follow the workflow below, narrowing from context to one issue; implement only within the user's request |
+| Retrospective | Turn an existing fix, design discussion, or change into a lesson, or rebuild a lesson | Read the code, discussion, diff, and validation evidence; use the same narrative without repeating completed work |
 
-显式调用本 skill，或自然语言明确表达上述学习、沉淀意图时进入流程。不要仅凭出现“Bug”“API”“优化”等主题词就触发；“修复这个 Bug”“审查这个 API”默认按普通开发请求处理。仅查阅已有 lesson 时按需读取，不因此生成或重建文章。
+Enter on explicit invocation or clear learning or documentation intent. Keywords such as "bug", "API", or "optimize" alone are insufficient: "fix this bug" and "review this API" are ordinary development requests. Looking up an existing lesson does not require creating or rebuilding one.
 
-进入后，同一主题的追问、方案比较和修改继续沿用学习流程，无需每轮重新调用。用户结束学习、切换无关任务或要求只完成开发工作时退出；不把一次调用扩展为跨任务的常驻模式，不自行启用任务完成后的自动复盘。
+Continue the learning workflow through follow-up questions, comparisons, and changes on the same topic. Exit when the user ends it, switches topics, or asks for development only. Do not carry the mode across unrelated tasks or enable automatic retrospectives.
 
-## 文档生成时机
+## When to write
 
-- **学习并优化：** 围绕一个问题完成分析、取舍、改动与验证后生成；验证受阻时如实记录已知结果和限制。
-- **只学习现有设计：** 解释清楚机制、约束与边界后生成，不要求修改代码。
-- **事后复盘：** 核对已有证据后生成，不强迫重新走实施流程。
-- **明确要求阶段性记录：** 生成自包含的阶段性文章，区分事实、假设、建议和已完成的改动。
+- **Learn and improve:** After analysis, tradeoffs, implementation, and validation of one issue. Record results and limits if validation is blocked.
+- **Understand existing design:** Once its mechanism, constraints, and boundaries are clear; no code change is required.
+- **Retrospective:** After checking existing evidence; do not repeat implementation.
+- **Explicit progress record:** Write a self-contained interim lesson, separating facts, hypotheses, proposals, and completed changes.
 
-每篇围绕一个已经形成完整认识的核心问题，不每轮生成文章；如需修订已有文章，执行删除重建规则。
+Write at a coherent learning checkpoint, not every turn. Follow the replacement rules when revising a lesson.
 
-## 范围与类型
+## Scope and types
 
-- 一次聚焦一个能用一句话表述的小问题。主要场景是共同发现 API 设计问题、比较方案并完成优化。
-- `bug`：围绕具体错误展开，说明症状、根因、修复和验证。
-- `design`：围绕系统如何工作、为什么这样组织展开，涵盖 API、架构、数据模型、算法和职责边界。
-- 按主要目的选择一个类型。概念与机制融入文章，不另设类型，不为分类拆分或重复生成。
-- 没有明确学习价值的机械修改通常不生成文章；用户明确要求讲解时，以其学习目标为准。不要为了生成 lesson 制造设计问题或不必要的修改。
+- Focus on one small question that fits in a sentence. The main use case is finding an API design issue, comparing options, and improving it together.
+- `bug`: Explain a concrete failure, its symptoms, cause, fix, and validation.
+- `design`: Explain how and why a system works, including APIs, architecture, data models, algorithms, and responsibility boundaries.
+- Choose one type by the lesson's main purpose. Weave concepts into the narrative; do not add types or duplicate articles for classification.
+- Skip mechanical changes with no clear learning value unless the user asks to learn from them. Never invent problems or unnecessary changes to produce a lesson.
 
-## 协作：全局 → 局部 → 优化 → 全局
+## Workflow: context → focus → improve → context
 
-1. **建立位置感。** 确定目标项目根目录，按主题检索已有 `lesson/` 与相关文档，并核对当前实现。阅读目标 API 的定义、实现、调用方和测试，理解真实路径。只介绍本次问题所需的系统背景，不扩展为全仓库审计。
-2. **聚焦一个问题。** 先概览相关发现，再根据用户目标选择一个具体问题。用真实调用、输入或操作顺序展示它如何发生及影响。其余发现简要留在对话中，避免扩展本次修改范围。
-3. **共同判断。** 解释根因或设计约束，给出最小可行改进；存在真实取舍时比较必要的备选方案，说明收益、代价和兼容性。问题涉及误用或漏检时，检查隐含调用顺序、可表达的无效状态、测试与真实调用的差异，解释什么条件让问题容易发生或不易被发现；描述机制与缺口，不归咎个人，无证据的原因标为未知。让用户有机会追问、纠正约束和参与关键选择；不要把学习变成逐步审批或测验，也不要先完成全部重构再讲解。
-4. **实施与验证。** 在用户请求及已有授权范围内修改，验证相关调用和边界行为。只请求分析时不擅自实施。Bug 尽可能先复现再修复；设计优化使用最小但有效的测试或运行示例。验证无法执行时说明原因，不把建议或预期结果写成已验证事实。
-5. **回到整体。** 重新走一遍最初的使用场景，展示优化后的完整调用及结果，说明职责分配、调用体验和系统行为的变化。结合用户反馈提炼可迁移的判断方法：下次遇到什么信号，应检查什么代码或约束，再据此作出什么选择；证据不足时保留待验证问题，不强造通用规则，再生成 lesson。
+1. **Establish context.** Identify the target project root. Search existing `lesson/` files and related docs, then check the current implementation. Read the API definition, implementation, callers, and tests to trace the real path. Keep background relevant; do not expand into a repository audit.
+2. **Focus on one issue.** Briefly summarize relevant findings, then choose one based on the user's goal. Show its trigger and impact through a real call, input, or operation sequence. Leave other findings in the conversation without expanding the change.
+3. **Reason together.** Explain the cause or constraints and the smallest useful improvement. Compare alternatives where real tradeoffs exist, including cost and compatibility. For misuse or missed detection, inspect hidden call ordering, representable invalid states, and gaps between tests and real usage. Explain mechanisms and gaps without blaming people; mark unsupported causes as unknown. Give the user room to question assumptions and shape key choices, without turning learning into a quiz or approval checklist. Do not finish the entire refactor before explaining it.
+4. **Implement and validate.** Stay within the user's request and existing authorization. Analysis alone does not authorize implementation. Reproduce bugs before fixing them where possible; use a small, meaningful test or runnable example for design changes. Check relevant callers and boundaries. State blocked validation and never report expected results as observed facts.
+5. **Return to context.** Revisit the original scenario with a complete call or test. Explain changes to responsibilities, caller experience, and system behavior. Incorporate feedback into a reusable judgment: what signal to notice next time, what code or constraint to inspect, and how that informs the choice. Keep open questions when evidence is insufficient; do not force general rules. Then write the lesson.
 
-讨论与试验可在对话中进行。已有材料足够时直接完成工作，不要求用户重复确认。用户仅希望学习现有实现时，解释真实行为和边界，不强求优化方案。
+Discuss and experiment in the conversation. Proceed when the available material is sufficient without repeated confirmation. For explanation-only requests, explain actual behavior and limits without forcing an improvement proposal.
 
-## 写作：代码为核心，文章自包含
+## Writing: code first, self-contained
 
-- 每篇围绕一个核心问题形成完整叙事，读者无需阅读此前对话、其他 lesson 或项目源码才能理解。
-- 从最小调用链开始，交代相关组件的职责、必要术语、数据与控制流。背景以支撑本篇结论为限。
-- 真实代码优先；无关细节过多时可用精简代码或伪代码，并明确标注。保留影响结论的关键条件，包括异常、排序、并发、状态和生命周期。
-- 代码片段交代必要类型、输入、输出和关键行为。重要结论对应具体代码、场景或执行结果，文字解释因果关系，避免只贴代码或泛泛论述。
-- 有学习价值的探索过程，保留影响判断的关键假设、排除依据和决定性证据；设计讨论说明哪个真实调用或约束改变了方案选择。不复述完整操作日志，不补写未发生的试验或方案比较。
-- 区分“改动有效”和“原因已证实”：症状消失或代码变短本身不能证明根因或设计收益。沿具体代码解释作用机制；存在合理的替代解释时，用能区分它们的最小测试或观察核验，证据不足则保留假设和验证方法。
-- 有改动时展示修改前后的 API 和调用方，用具体输入或执行过程解释差异，再用优化后的完整调用或测试回到整体。没有实际改动时不编造“修改前后”。
-- 区分代码事实、历史决策依据和推测；无法确认的动机标为未知或推测。历史经验复用前检查当前代码与约束，不能将旧结论当成永久规则。
-- 自然对应 KISS、DRY 等原则时，按“代码变化 → 收益与代价 → 对应原则 → 适用边界”解释。不要强贴标签，也不要以“最佳实践”代替证据。相似代码是否表达同一业务知识，比表面重复更能决定是否适用 DRY。
-- 使用用户的交流语言，保留准确的代码标识符。引用代码时提供仓库相对路径、关键符号，必要时注明版本或提交；链接用于深入阅读，不能代替正文解释。
+- Tell a complete story about one question. Readers should not need prior conversation, other lessons, or project source to understand it.
+- Start with the smallest useful call chain. Explain responsibilities, essential terms, data flow, and control flow needed for the conclusion.
+- Prefer real code. Label simplified code or pseudocode, preserving relevant errors, ordering, concurrency, state, and lifetimes.
+- Include the types, inputs, outputs, and behavior needed to read each snippet. Ground important claims in code, scenarios, or results, and explain the causal links.
+- Preserve useful hypotheses, reasons for rejecting them, and decisive evidence. For design choices, show which real call or constraint changed the decision. Skip full activity logs; never invent experiments or comparisons.
+- Separate a working change from a proven explanation. Symptom disappearance or shorter code alone proves neither cause nor design benefit. Trace the mechanism through code. Use a minimal test or observation to distinguish plausible alternatives; retain hypotheses and suggested checks when evidence is insufficient.
+- For actual changes, show the API and callers before and after. Explain the difference with concrete inputs or execution steps, then return to the whole scenario. Never invent a before/after for unchanged code.
+- Separate code facts, historical rationale, and inference. Mark unknown motives. Check current code and constraints before reusing old lessons; past conclusions are not permanent rules.
+- When KISS, DRY, or another principle fits naturally, explain: code change → benefits and costs → principle → limits. Labels never replace evidence. For DRY, ask whether similar code represents the same business knowledge, not just repeated syntax.
+- Use the user's language and exact code identifiers. Cite repository-relative paths and key symbols, adding a version or commit where useful. Links support deeper reading; they cannot replace the explanation.
 
-## 文件与元数据
+## Files and metadata
 
-文章全部平铺在**目标项目根目录**的 `lesson/` 下，不是 skill 安装目录，也不是任意当前子目录。使用普通 Markdown、代码块、表格或纯文本流程；不生成 HTML、图片或其他附件，不要求特殊渲染器。
+Keep articles flat under `lesson/` at the **target project root**, not the skill installation directory or an arbitrary subdirectory. Use plain Markdown, code blocks, tables, and text flows; no HTML, images, attachments, or special renderer.
 
-文件名固定为 `YYYY-MM-DD-类型-主题.md`，日期为用户当地的创建日期，主题使用简短、可检索的 kebab-case。例如：`2026-09-14-design-cursor-pagination.md`。
+Name files `YYYY-MM-DD-{bug|design}-topic.md`, using the user's local creation date and a short, searchable kebab-case topic. Example: `2026-09-14-design-cursor-pagination.md`.
 
-文章以 YAML frontmatter 开头，标题留在正文：
+Start with YAML frontmatter; keep the title in the body:
 
 ```markdown
 ---
 type: design
 created: "2026-09-14"
 verified: "2026-09-14"
-scope: 分页 API v2
+scope: Pagination API v2
 ---
 
-# 为什么分页 API 返回下一页游标
+# Why the pagination API returns a next-page cursor
 ```
 
-- `type`、`created` 必填，必须与文件名一致；类型仅允许 `bug`、`design`。
-- `verified` 可选，仅在实际核对相关实现或证据后填写最近核验日期；它不代表所有测试都通过，具体验证方法与结果写在正文。
-- `scope` 按需填写适用模块、接口或版本。无需 `updated`，不复制标题字段，不保留空字段。
-- `lesson/README.md` 作为轻量索引，按两种类型列出文章链接和一句话说明。文章是学习内容，索引仅帮助浏览。
+- Require `type` and `created`, matching the filename. Types are limited to `bug` and `design`.
+- Include `verified` only after checking the implementation or evidence. It records the latest check date, not a claim that all tests passed; describe methods and results in the body.
+- Add `scope` for a relevant module, interface, or version. Omit `updated`, duplicate title metadata, and empty fields.
+- Maintain `lesson/README.md` as a small index grouped by the two types, with links and one-sentence descriptions.
 
-## 删除与重建
+## Delete and rebuild
 
-已有 lesson 正文不做原地更新、追加或局部修补。需要纠错、补充或反映新实现时，整体重建：
+Do not edit, append to, or patch an existing lesson in place. Replace it to correct, extend, or reflect a changed implementation:
 
-1. 阅读旧文档及相关引用，核对当前代码和证据，确定需要替代的具体文章。
-2. 在旧文件之外准备完整、自包含的新文章，保留仍有价值的背景与取舍，并检查下方交付标准。新文档使用重建当天的 `created`；`verified` 只反映实际核验日期。
-3. 新内容准备并检查完成后，删除对应旧文档，创建新文件。保留可恢复的旧内容直到替换成功，避免生成失败导致旧资料丢失。即使同日同路径，也按完整删除重建处理。
-4. 同步索引及仓库内指向旧文档的引用，只做本次替换所需的链接调整。历史交给 Git，`lesson/` 中不保留旧副本或重定向页；无需为此自动提交。
+1. Read the old article and its references. Check current code and evidence to identify the exact article to replace.
+2. Prepare a complete replacement separately. Preserve useful context and tradeoffs, then run the delivery checks below. Set `created` to the rebuild date; set `verified` only to an actual check date.
+3. Once ready, delete the old article and create the new file. Keep a recoverable copy until replacement succeeds, including same-day replacements at the same path.
+4. Update the index and repository references to the replaced article. Keep history in Git, without old copies or redirect pages in `lesson/`. Do not commit automatically.
 
-重建只针对需要替代的文章，不删除同主题但讨论不同问题的 lesson。索引和引用可正常同步维护，不受正文不可更新规则限制。
+Replace only the affected article, preserving lessons about different questions on the same topic. The index and links may be edited normally.
 
-## 交付检查
+## Delivery checks
 
-交付前确认：
+Before delivery, confirm:
 
-- 没读过源码的读者能解释目标 API 的职责、具体问题、代码变化、有效原因、代价和全局影响；纯讲解文章能解释工作机制与边界。
-- 每篇只回答一个核心问题，代码足够自包含，精简没有改变关键语义，重要结论有依据。
-- 验证步骤与实际结果分明，因果判断有机制和证据支撑；有价值的探索过程与误用、漏检原因按证据讲清，不编造未知部分。
-- 有依据的经验给出下次可识别的信号、检查对象和选择条件；适用时的设计原则有具体例子与边界，不强造规则。
-- 目录、创建日期、类型、frontmatter、索引及引用一致；重建后只保留新文章。
+- A reader unfamiliar with the source can explain the API's role, problem, change, mechanism, costs, and wider impact. Explanation-only lessons cover behavior and boundaries.
+- The article answers one question with self-contained code, faithful simplification, and evidence for important claims.
+- Validation steps and observed results are distinct. Causal claims have mechanisms and evidence; useful exploration and misuse or detection gaps are explained without inventing missing facts.
+- Supported insights name signals, checks, and conditions for future decisions. Relevant principles have concrete examples and limits; rules are not forced.
+- Paths, dates, types, frontmatter, index, and references agree. Replacements leave only the new article.
 
-完成后提供文章链接、核心收获，以及实际改动和验证的简要结果。不要将未实现的方案报告为已完成，也不要承诺文档会自动被所有后续 Agent 读取。
+Provide the article link, main takeaway, and a brief account of actual changes and validation. Do not report proposals as completed work or promise that every future agent will read the lesson automatically.

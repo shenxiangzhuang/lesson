@@ -1,81 +1,82 @@
 # Lesson
 
-与 Agent 一起学习 API 设计和调试：从全局聚焦一个具体问题，通过代码分析、方案比较和实践完成改进，再回到全局理解影响。
+Learn API design and debugging with an agent. Start with the system context, focus on one issue, improve it through code and discussion, then revisit the wider impact.
 
-每篇文章都假设读者没有读过相关源码，以真实代码或明确标注的伪代码展开。产物保存在目标项目的 `lesson/YYYY-MM-DD-{bug|design}-主题.md`，带 YAML frontmatter；需要修订时删除旧文档并完整重建。
+Each lesson assumes the reader has not read the relevant source. Use real code or labeled pseudocode. Save articles as `lesson/YYYY-MM-DD-{bug|design}-topic.md` in the target project, with YAML frontmatter. Revise by deleting and rebuilding the article.
 
-完整行为约定见 [SKILL.md](plugins/lesson/skills/lesson/SKILL.md)。插件仅包含 skill，无运行时依赖。
+See [SKILL.md](plugins/lesson/skills/lesson/SKILL.md) for the full workflow. The plugin contains only a skill, with no runtime dependencies.
 
-同一份 skill 通过 GitHub 和 npm 分发：Codex 使用 Git marketplace，Pi 使用 npm 包，其他支持标准 skill 的客户端可通过 Skills CLI 安装。
+The same skill ships through GitHub and npm: Codex uses a Git marketplace, Pi uses npm, and other compatible clients can use Skills CLI.
 
-## 使用入口
+## Entry points
 
-| 入口 | 示例 | 何时生成文档 |
+| Entry | Example | When to write |
 | --- | --- | --- |
-| 主动学习 | “我想学习这个项目的 API 设计，一起找一个问题并优化” | 完成该问题的分析、取舍和验证后；只学习现有设计时，在机制与边界讲清楚后 |
-| 事后复盘 | “把刚才这个 Bug 的修复整理成 lesson” | 核对已有代码和验证证据后，不重复实施已完成的工作 |
+| Active learning | "Help me learn this project's API design. Let's find and improve one issue." | After analysis, tradeoffs, and validation; for explanation only, after clarifying behavior and boundaries |
+| Retrospective | "Turn the bug fix we just completed into a lesson." | After checking existing code and evidence, without repeating completed work |
 
-可以显式调用 skill，也可以向支持隐式选择的客户端表达学习或沉淀意图。普通修复、代码审查和优化请求默认不触发；客户端的隐式选择取决于其能力与判断，需要明确进入流程时请显式调用。
+Invoke the skill explicitly or express learning intent in a client that supports implicit selection. Routine fixes, reviews, and optimizations do not trigger it by default. Implicit selection depends on the client; invoke explicitly when you want to ensure activation.
 
-同一主题的追问和修改沿用学习流程，无需每轮调用或生成文档；结束学习或切换无关任务时退出。明确要求阶段性记录时可以提前生成，并标明尚未实施或验证的部分。安装本插件不会自动开启每次任务结束后的复盘。
+Follow-up questions and changes on the same topic continue the workflow without a new invocation or article each turn. Exit when learning ends or the topic changes. Requested progress records may be written earlier, with unfinished work and validation gaps marked. Installation does not enable automatic retrospectives.
 
-## 安装到 Codex
+## Install in Codex
 
-发布对应版本后，在终端执行以下命令。将 `v0.1.0` 替换为 [Releases](https://github.com/shenxiangzhuang/lesson/releases) 中需要的版本：
+After a version is published, run these commands. Replace `v0.1.0` with the desired [release](https://github.com/shenxiangzhuang/lesson/releases):
 
 ```sh
 codex plugin marketplace add shenxiangzhuang/lesson --ref v0.1.0
 codex plugin add lesson@lesson
 ```
 
-然后重启 Codex 应用并新建任务，使用 `$lesson` 调用，例如：
+Restart Codex, start a new task, and invoke `$lesson`:
 
 ```text
-$lesson 和我一起检查当前客户端 API，从全局聚焦一个小的设计问题，
-解释现有代码与优化方案，完成修改和验证，并生成一篇自包含的 lesson。
+$lesson Explore this client's API with me. Start with the system context,
+focus on one small design issue, explain the code and options, implement
+and validate the improvement, and write a self-contained lesson.
 ```
 
-需要升级或回退时，先移除旧 marketplace 登记，再执行安装命令并将 `--ref` 改为目标版本标签：
+To upgrade or roll back, remove the marketplace registration, then repeat the installation commands with the target tag:
 
 ```sh
 codex plugin marketplace remove lesson
-# 随后重新执行上面的两条安装命令，使用目标版本标签。
+# Repeat the two installation commands above with the target version.
 ```
 
-Codex 将不同 Git ref 视为不同来源；切换到本地目录或开发分支前也需要这一步。固定标签不会随着开发分支变化而更新。
+Codex treats different Git refs as different sources. Remove the registration before switching to a local directory or development branch too. Pinned tags do not follow development changes.
 
-若希望跟随开发分支，将 `--ref` 设为 `master`；之后运行：
+To follow development, install with `--ref master`, then update with:
 
 ```sh
 codex plugin marketplace upgrade lesson
 codex plugin add lesson@lesson
 ```
 
-Codex 应用也可从插件页面添加 GitHub marketplace：仓库填 `shenxiangzhuang/lesson`，Git ref 填目标版本标签，随后安装 Lesson。
+You can also add a GitHub marketplace from the Codex plugin page: use repository `shenxiangzhuang/lesson` and the target tag as the Git ref, then install Lesson.
 
-## 安装到 Pi
+## Install in Pi
 
-对应版本发布到 npm 后执行：
+After the version is published to npm:
 
 ```sh
 pi install npm:@shenxiangzhuang/lesson@0.1.0
 ```
 
-开启新的 Pi 会话后，使用 `/skill:lesson` 调用。
+Start a new Pi session and invoke `/skill:lesson`.
 
-包中的 `pi.skills` 指向与 Codex 相同的 skill 目录。升级或回退时重新执行命令，替换目标版本；固定版本不会自动跟随最新版。详见 [Pi 包文档](https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/packages.md)。
+The package's `pi.skills` points to the same skill directory as Codex. To upgrade or roll back, repeat the command with the target version. Pinned versions do not follow the latest release. See the [Pi package docs](https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/docs/packages.md).
 
-## 其他支持标准 skill 的客户端
+## Other clients
 
-代码推送到 GitHub 后，可通过 [Skills CLI](https://skills.sh/docs/cli) 安装并选择目标客户端：
+Once the code is on GitHub, install with [Skills CLI](https://skills.sh/docs/cli) and select your client:
 
 ```sh
 npx skills add shenxiangzhuang/lesson --skill lesson
 ```
 
-这是标准 skill 安装方式。OpenCode 也可通过该方式安装 skill；本 npm 包不包含 OpenCode 所要求的 JavaScript 插件入口，因此不要把它填写到 OpenCode 的 `plugin` 配置中。
+OpenCode can use this skill installation method. This npm package has no OpenCode JavaScript plugin entry point, so do not add it to OpenCode's `plugin` configuration.
 
-## 本地验证
+## Local validation
 
 ```sh
 python3 scripts/check-release.py
@@ -84,37 +85,37 @@ codex plugin add lesson@lesson
 codex plugin list --marketplace lesson --json
 ```
 
-检查命令需要 Python 3.9+、Node.js 和 npm，会实际打包到临时目录，验证 Pi/Codex 使用同一份 skill、npm 产物与源码一致，然后清理临时包。检查不安装项目依赖。
+The check requires Python 3.9+, Node.js, and npm. It packs into a temporary directory, verifies that Pi and Codex share the same skill and that package contents match the source, then removes the temporary package. It installs no project dependencies.
 
-后面的本地安装命令会配置当前用户的 Codex。安装后开启新任务测试；打包检查不代表教学效果已经通过真实场景验证。
+The remaining commands configure the current user's Codex. Start a new task to try the installed skill. Packaging checks do not validate teaching quality in real use.
 
-## 发布版本
+## Releases
 
-版本入口是 [package.json](package.json) 的 `version` 字段，使用 `X.Y.Z` 格式。通过下面的命令升级版本，npm 的 `version` hook 会同步 [Codex 插件清单](plugins/lesson/.codex-plugin/plugin.json)：
+[package.json](package.json) owns the version, in `X.Y.Z` format. Bump it with:
 
 ```sh
 npm version patch --no-git-tag-version
 ```
 
-也可将 `patch` 改为 `minor`、`major` 或具体版本。将两份清单一起提交；检查会拒绝 npm、Codex 与 Git 标签的版本差异。
+The npm `version` hook syncs the [Codex manifest](plugins/lesson/.codex-plugin/plugin.json). Use `minor`, `major`, or an exact version as needed. Commit both manifests; checks reject mismatched npm, Codex, and Git tag versions.
 
-### 首次配置 npm 发布
+### Set up npm publishing
 
-包名暂定为 `@shenxiangzhuang/lesson`，发布账号需要拥有该 scope 的发布权限。若使用其他 scope，修改 `package.json` 与安装示例中的包名。
+The proposed package name is `@shenxiangzhuang/lesson`. The publishing account needs access to that scope. To use another scope, update `package.json` and the installation examples.
 
-工作流使用 npm Trusted Publishing（OIDC）。包尚未创建时，可先在 GitHub 仓库的 Actions secrets 中设置有该包发布权限的 `NPM_TOKEN`，供首次标签发布使用。首次发布成功后，在 npm 包设置中添加 GitHub Actions trusted publisher：
+The workflow supports npm Trusted Publishing (OIDC). Before the package exists, add an `NPM_TOKEN` with publish access to the repository's Actions secrets for the first tagged release. After that release, add a GitHub Actions trusted publisher in the npm package settings:
 
-- Organization or user：`shenxiangzhuang`
-- Repository：`lesson`
-- Workflow filename：`release.yml`
-- Allowed actions：允许直接 `npm publish`
+- Organization or user: `shenxiangzhuang`
+- Repository: `lesson`
+- Workflow filename: `release.yml`
+- Allowed actions: allow direct `npm publish`
 
-配置完成后可移除 `NPM_TOKEN`，后续通过 OIDC 发布。工作流使用 GitHub-hosted runner、Node.js 24 和 `id-token: write`。配置规则见 [npm Trusted Publishing 文档](https://docs.npmjs.com/trusted-publishers/)。
+Then remove `NPM_TOKEN` to use OIDC for later releases. The workflow uses a GitHub-hosted runner, Node.js 24, and `id-token: write`. See [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/).
 
-### 推送版本标签
+### Push a release tag
 
-1. 修改 skill 或插件元数据，通过 `npm version` 更新版本，提交并推送到 `master`，等待检查通过。初次发布可直接使用已有的 `0.1.0`。
-2. 在该提交上创建同版本的 `vX.Y.Z` 标签并推送。例如首次发布：
+1. Update the skill or plugin metadata, bump with `npm version`, commit, and push to `master`. Wait for checks to pass. The first release can use the existing `0.1.0`.
+2. Tag that commit with the matching `vX.Y.Z` and push. For the first release:
 
    ```sh
    python3 scripts/check-release.py v0.1.0
@@ -122,14 +123,14 @@ npm version patch --no-git-tag-version
    git push origin v0.1.0
    ```
 
-3. [发布工作流](.github/workflows/release.yml) 先校验两种包及标签，然后发布 npm，成功后创建 GitHub Release 并生成发布说明。检查或 npm 发布失败时不创建 GitHub Release。
+3. The [release workflow](.github/workflows/release.yml) validates the packages and tag, publishes npm, then creates a GitHub Release with generated notes. Failed checks or npm publication prevent the GitHub Release.
 
-如果 npm 已成功而 GitHub Release 步骤失败，使用 GitHub Actions 的 **Re-run failed jobs** 仅重试失败的任务；不要重新发布已存在的 npm 版本。
+If npm succeeds but GitHub Release creation fails, use **Re-run failed jobs** in GitHub Actions. Do not republish the existing npm version.
 
-Codex 从 Git 标签安装，Pi 从 npm 安装；两者使用同版本、同内容的 skill。已发布标签与 npm 版本保持不变，后续修订发布新版本。
+Codex installs from Git tags; Pi installs from npm. Both receive the same skill at the same version. Keep published tags and npm versions immutable; publish a new version for revisions.
 
-安装与打包方式参考 [Ponytail](https://github.com/dietrichgebert/ponytail) 和 [OpenAI 插件文档](https://developers.openai.com/codex/plugins/build)。本仓库的 marketplace 使用相对路径引用同一 Git 快照内的插件，使固定标签同时固定 skill 内容。
+Distribution follows [Ponytail](https://github.com/dietrichgebert/ponytail) and the [OpenAI plugin docs](https://developers.openai.com/codex/plugins/build). Relative marketplace paths keep the plugin in the same Git snapshot, so a pinned tag also pins its skill content.
 
-## 许可证
+## License
 
 [MIT](LICENSE)

@@ -12,14 +12,14 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Lesson",
-    "shortDescription": "与 Agent 一起理解、改进代码并沉淀经验",
-    "longDescription": "从全局聚焦一个 Bug 或 API 设计问题，通过代码理解原因、比较方案、实施验证，再回到全局。生成自包含的 Markdown lesson，供用户学习和 Agent 参考。",
+    "shortDescription": "Learn from code, improve it, and keep the lessons",
+    "longDescription": "Start with system context, focus on one bug or API design issue, compare options, implement and validate, then revisit the whole. Write self-contained Markdown lessons for users and future agents.",
     "developerName": "Mathew Shen",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],
     "defaultPrompt": [
-      "使用 $lesson，和我一起找出当前 API 的一个设计问题，解释取舍并完成优化。",
-      "使用 $lesson，将这次 Bug 的根因、修复和验证整理成可独立阅读的代码讲解。"
+      "Use $lesson to find one design issue in this API with me, explain the tradeoffs, and improve it.",
+      "Use $lesson to explain this bug's cause, fix, and validation in a self-contained code walkthrough."
     ]
   }
 }
